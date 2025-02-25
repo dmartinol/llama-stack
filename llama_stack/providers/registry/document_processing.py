@@ -20,7 +20,7 @@ def available_providers() -> List[ProviderSpec]:
         InlineProviderSpec(
             api=Api.document_processing,
             provider_type="inline::docling",
-            pip_packages=EMBEDDING_DEPS + ["docling", "sentence-transformers --no-deps"],
+            pip_packages=EMBEDDING_DEPS + ["docling"],
             module="llama_stack.providers.inline.document_processing.docling",
             config_class="llama_stack.providers.inline.document_processing.docling.DoclingImplConfig",
             api_dependencies=[],
