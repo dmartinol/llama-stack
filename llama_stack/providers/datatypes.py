@@ -58,6 +58,10 @@ class ToolsProtocolPrivate(Protocol):
     async def unregister_tool(self, tool_id: str) -> None: ...
 
 
+class DocumentProcessingProtocolPrivate(Protocol):
+    pass
+
+
 @json_schema_type
 class ProviderSpec(BaseModel):
     api: Api

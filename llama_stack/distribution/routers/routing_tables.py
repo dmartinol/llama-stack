@@ -22,6 +22,12 @@ from llama_stack.apis.scoring_functions import (
     ScoringFunctions,
 )
 from llama_stack.apis.shields import ListShieldsResponse, Shield, Shields
+from llama_stack.providers.inline.document_processing import get_default_provider_impl
+from llama_stack.apis.document_processing import (
+    DocumentProcessing,
+    DocumentProcessors,
+    DocumentProcessorInput,
+)
 from llama_stack.apis.tools import (
     ListToolGroupsResponse,
     ListToolsResponse,
@@ -66,6 +72,8 @@ async def register_object_with_provider(obj: RoutableObject, p: Any) -> Routable
         return await p.register_benchmark(obj)
     elif api == Api.tool_runtime:
         return await p.register_tool(obj)
+    # elif api == Api.document_processing:
+    #     return await p.register_document_processor(obj)
     else:
         raise ValueError(f"Unknown API {api} for registering object with provider")
 
@@ -127,6 +135,8 @@ class CommonRoutingTableImpl(RoutingTable):
                 p.benchmark_store = self
             elif api == Api.tool_runtime:
                 p.tool_store = self
+            elif api == Api.document_processing:
+                p.model_store = self
 
     async def shutdown(self) -> None:
         for p in self.impls_by_provider_id.values():
@@ -148,6 +158,8 @@ class CommonRoutingTableImpl(RoutingTable):
                 return ("Eval", "benchmark")
             elif isinstance(self, ToolGroupsRoutingTable):
                 return ("Tools", "tool")
+            elif isinstance(self, DocumentProcessorsRoutingTable):
+                return ("DocumentProcessing", "document_processing")
             else:
                 raise ValueError("Unknown routing table type")
 
@@ -543,3 +555,20 @@ class ToolGroupsRoutingTable(CommonRoutingTableImpl, ToolGroups):
 
     async def shutdown(self) -> None:
         pass
+
+
+class DocumentProcessorsRoutingTable(CommonRoutingTableImpl, DocumentProcessors):
+    async def register_document_processor(
+        self,
+        provider_id: str,
+    ) -> None:
+        """TODO"""
+        pass
+
+    async def list_document_processors(self) -> list[DocumentProcessorInput]:
+        """TODO"""
+        return []
+
+    async def get_document_processor_or_default(self, provider_id: str) -> DocumentProcessing:
+        processor = self.impls_by_provider_id.get(provider_id, None)
+        return processor or await get_default_provider_impl()

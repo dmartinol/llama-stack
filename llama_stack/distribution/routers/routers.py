@@ -12,6 +12,11 @@ from llama_stack.apis.common.content_types import (
     InterleavedContentItem,
 )
 from llama_stack.apis.datasetio import DatasetIO, PaginatedRowsResult
+from llama_stack.apis.document_processing import (
+    DocumentProcessing,
+    ConvertResponse,
+    ChunkResponse,
+)
 from llama_stack.apis.eval import (
     BenchmarkConfig,
     Eval,
@@ -482,3 +487,37 @@ class ToolRuntimeRouter(ToolRuntime):
         self, tool_group_id: Optional[str] = None, mcp_endpoint: Optional[URL] = None
     ) -> List[ToolDef]:
         return await self.routing_table.get_provider_impl(tool_group_id).list_tools(tool_group_id, mcp_endpoint)
+
+
+class DocumentProcessingRouter(DocumentProcessing):
+    """Routes to an provider based on the vector db identifier"""
+
+    def __init__(
+        self,
+        routing_table: RoutingTable,
+    ) -> None:
+        self.routing_table = routing_table
+
+    async def initialize(self) -> None:
+        pass
+
+    async def shutdown(self) -> None:
+        pass
+
+    async def convert(
+        self,
+        documents: List[RAGDocument],
+    ) -> ConvertResponse:
+        processor = await self.routing_table.get_document_processor_or_default("docling")
+        return await processor.convert(documents)
+
+    async def chunk(
+        self,
+        # TODO be more specific with the processed document type: where do we set metadata?
+        document_id: str,
+        content: str,
+        window_len: int,
+        overlap_len: int,
+    ) -> ChunkResponse:
+        processor = await self.routing_table.get_document_processor_or_default("docling")
+        return await processor.chunk(document_id, content, window_len, overlap_len)

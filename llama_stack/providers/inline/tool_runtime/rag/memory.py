@@ -27,8 +27,7 @@ from llama_stack.apis.tools import (
 )
 from llama_stack.apis.vector_io import QueryChunksResponse, VectorIO
 from llama_stack.providers.datatypes import ToolsProtocolPrivate
-from llama_stack.providers.utils.docling.chunker import Chunker
-from llama_stack.providers.utils.docling.converter import Converter
+from llama_stack.apis.document_processing import DocumentProcessing, ConvertResponse
 
 from .config import RagToolRuntimeConfig
 from .context_retriever import generate_rag_query
@@ -47,10 +46,12 @@ class MemoryToolRuntimeImpl(ToolsProtocolPrivate, ToolRuntime, RAGToolRuntime):
         config: RagToolRuntimeConfig,
         vector_io_api: VectorIO,
         inference_api: Inference,
+        document_processing: DocumentProcessing,
     ):
         self.config = config
         self.vector_io_api = vector_io_api
         self.inference_api = inference_api
+        self.document_processing = document_processing
 
     async def initialize(self):
         pass
@@ -64,19 +65,16 @@ class MemoryToolRuntimeImpl(ToolsProtocolPrivate, ToolRuntime, RAGToolRuntime):
         vector_db_id: str,
         chunk_size_in_tokens: int = 512,
     ) -> None:
-        converter: Converter = Converter.from_config(self.config.docling)
-        chunker: Chunker = Chunker.from_config(self.config.docling)
         chunks = []
-        for doc in documents:
-            content = await converter.content_from_doc(doc=doc)
-            chunks.extend(
-                chunker.make_overlapped_chunks(
-                    doc.document_id,
-                    content,
-                    chunk_size_in_tokens,
-                    chunk_size_in_tokens // 4,
-                )
+        converted: ConvertResponse = await self.document_processing.convert(documents=documents)
+        for document_id, content in converted.converted_by_document_id.items():
+            chunk_response = await self.document_processing.chunk(
+                document_id,
+                content,
+                chunk_size_in_tokens,
+                chunk_size_in_tokens // 4,
             )
+            chunks.extend(chunk_response.chunks)
 
         if not chunks:
             return

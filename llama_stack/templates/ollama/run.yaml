@@ -10,6 +10,7 @@ apis:
 - telemetry
 - tool_runtime
 - vector_io
+- document_processing
 providers:
   inference:
   - provider_id: ollama
@@ -38,7 +39,8 @@ providers:
     provider_type: inline::meta-reference
     config:
       service_name: ${env.OTEL_SERVICE_NAME:llama-stack}
-      sinks: ${env.TELEMETRY_SINKS:console,sqlite}
+      sinks: ${env.TELEMETRY_SINKS:console,sqlite,otel}
+      otel_endpoint: "http://localhost:4318/v1/traces"
       sqlite_db_path: ${env.SQLITE_DB_PATH:~/.llama/distributions/ollama/trace_store.db}
   eval:
   - provider_id: meta-reference
@@ -78,11 +80,16 @@ providers:
     config: {}
   - provider_id: rag-runtime
     provider_type: inline::rag-runtime
+    config: {}
+  document_processing:
+  - provider_id: docling
+    provider_type: inline::docling
     config:
-      docling:
-        export_type: JSON # one of JSON, MARKDOWN
-        accelerator_options:
-          num_threads: 1
+      export_type: JSON # one of JSON, MARKDOWN
+      accelerator_options:
+        num_threads: 1
+      tokenizer_model_id: all-MiniLM-L6-v2 ## TODO
+
 metadata_store:
   type: sqlite
   db_path: ${env.SQLITE_STORE_DIR:~/.llama/distributions/ollama}/registry.db

@@ -82,6 +82,7 @@ RESOURCES = [
     ),
     ("benchmarks", Api.benchmarks, "register_benchmark", "list_benchmarks"),
     ("tool_groups", Api.tool_groups, "register_tool_group", "list_tool_groups"),
+    ("document_processors", Api.document_processors, "register_document_processor", "list_document_processors"),
 ]
 
 

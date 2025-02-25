@@ -25,6 +25,7 @@ from llama_stack.apis.telemetry import Telemetry
 from llama_stack.apis.tools import ToolGroups, ToolRuntime
 from llama_stack.apis.vector_dbs import VectorDBs
 from llama_stack.apis.vector_io import VectorIO
+from llama_stack.apis.document_processing import DocumentProcessing, DocumentProcessors
 from llama_stack.distribution.client import get_client_impl
 from llama_stack.distribution.datatypes import (
     AutoRoutedProviderSpec,
@@ -39,6 +40,8 @@ from llama_stack.providers.datatypes import (
     Api,
     BenchmarksProtocolPrivate,
     DatasetsProtocolPrivate,
+    DocumentProcessingProtocolPrivate,
+    EvalTasksProtocolPrivate,
     InlineProviderSpec,
     ModelsProtocolPrivate,
     ProviderSpec,
@@ -77,6 +80,8 @@ def api_protocol_map() -> Dict[Api, Any]:
         Api.post_training: PostTraining,
         Api.tool_groups: ToolGroups,
         Api.tool_runtime: ToolRuntime,
+        Api.document_processors: DocumentProcessors,
+        Api.document_processing: DocumentProcessing,
     }
 
 
@@ -84,6 +89,7 @@ def additional_protocols_map() -> Dict[Api, Any]:
     return {
         Api.inference: (ModelsProtocolPrivate, Models, Api.models),
         Api.tool_groups: (ToolsProtocolPrivate, ToolGroups, Api.tool_groups),
+        Api.document_processors: (DocumentProcessingProtocolPrivate, DocumentProcessors, Api.document_processors),
         Api.vector_io: (VectorDBsProtocolPrivate, VectorDBs, Api.vector_dbs),
         Api.safety: (ShieldsProtocolPrivate, Shields, Api.shields),
         Api.datasetio: (DatasetsProtocolPrivate, Datasets, Api.datasets),

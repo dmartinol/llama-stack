@@ -13,6 +13,8 @@ from llama_stack.providers.datatypes import Api, RoutingTable
 from .routing_tables import (
     BenchmarksRoutingTable,
     DatasetsRoutingTable,
+    DocumentProcessorsRoutingTable,
+    EvalTasksRoutingTable,
     ModelsRoutingTable,
     ScoringFunctionsRoutingTable,
     ShieldsRoutingTable,
@@ -35,6 +37,7 @@ async def get_routing_table_impl(
         "scoring_functions": ScoringFunctionsRoutingTable,
         "benchmarks": BenchmarksRoutingTable,
         "tool_groups": ToolGroupsRoutingTable,
+        "document_processors": DocumentProcessorsRoutingTable,
     }
 
     if api.value not in api_to_tables:
@@ -48,6 +51,7 @@ async def get_routing_table_impl(
 async def get_auto_router_impl(api: Api, routing_table: RoutingTable, _deps) -> Any:
     from .routers import (
         DatasetIORouter,
+        DocumentProcessingRouter,
         EvalRouter,
         InferenceRouter,
         SafetyRouter,
@@ -64,6 +68,7 @@ async def get_auto_router_impl(api: Api, routing_table: RoutingTable, _deps) -> 
         "scoring": ScoringRouter,
         "eval": EvalRouter,
         "tool_runtime": ToolRuntimeRouter,
+        "document_processing": DocumentProcessingRouter,
     }
     if api.value not in api_to_routers:
         raise ValueError(f"API {api.value} not found in router map")

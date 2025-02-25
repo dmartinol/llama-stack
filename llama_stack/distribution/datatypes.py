@@ -12,6 +12,8 @@ from llama_stack.apis.benchmarks import Benchmark, BenchmarkInput
 from llama_stack.apis.datasetio import DatasetIO
 from llama_stack.apis.datasets import Dataset, DatasetInput
 from llama_stack.apis.eval import Eval
+from llama_stack.apis.eval_tasks import EvalTask, EvalTaskInput
+from llama_stack.apis.document_processing import DocumentProcessorInput
 from llama_stack.apis.inference import Inference
 from llama_stack.apis.models import Model, ModelInput
 from llama_stack.apis.safety import Safety
@@ -175,6 +177,7 @@ a default SQLite store will be used.""",
     scoring_fns: List[ScoringFnInput] = Field(default_factory=list)
     benchmarks: List[BenchmarkInput] = Field(default_factory=list)
     tool_groups: List[ToolGroupInput] = Field(default_factory=list)
+    document_processors: List[DocumentProcessorInput] = Field(default_factory=list)
 
     server: ServerConfig = Field(
         default_factory=ServerConfig,
