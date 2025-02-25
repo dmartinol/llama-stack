@@ -14,7 +14,6 @@ from .routing_tables import (
     BenchmarksRoutingTable,
     DatasetsRoutingTable,
     DocumentProcessorsRoutingTable,
-    EvalTasksRoutingTable,
     ModelsRoutingTable,
     ScoringFunctionsRoutingTable,
     ShieldsRoutingTable,

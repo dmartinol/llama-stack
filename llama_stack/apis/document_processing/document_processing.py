@@ -9,13 +9,13 @@ from typing import (
     runtime_checkable,
 )
 
-from llama_stack.apis.tools import RAGDocument
-from llama_models.schema_utils import json_schema_type, webmethod
 from pydantic import BaseModel
 
 from llama_stack.apis.inference import ModelStore
+from llama_stack.apis.tools import RAGDocument
 from llama_stack.apis.vector_io import Chunk
 from llama_stack.providers.utils.telemetry.trace_protocol import trace_protocol
+from llama_stack.schema_utils import json_schema_type, webmethod
 
 
 @json_schema_type

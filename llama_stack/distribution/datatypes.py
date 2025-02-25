@@ -11,9 +11,8 @@ from pydantic import BaseModel, Field
 from llama_stack.apis.benchmarks import Benchmark, BenchmarkInput
 from llama_stack.apis.datasetio import DatasetIO
 from llama_stack.apis.datasets import Dataset, DatasetInput
-from llama_stack.apis.eval import Eval
-from llama_stack.apis.eval_tasks import EvalTask, EvalTaskInput
 from llama_stack.apis.document_processing import DocumentProcessorInput
+from llama_stack.apis.eval import Eval
 from llama_stack.apis.inference import Inference
 from llama_stack.apis.models import Model, ModelInput
 from llama_stack.apis.safety import Safety

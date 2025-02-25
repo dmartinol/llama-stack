@@ -12,6 +12,7 @@ from llama_stack.apis.agents import Agents
 from llama_stack.apis.benchmarks import Benchmarks
 from llama_stack.apis.datasetio import DatasetIO
 from llama_stack.apis.datasets import Datasets
+from llama_stack.apis.document_processing import DocumentProcessing, DocumentProcessors
 from llama_stack.apis.eval import Eval
 from llama_stack.apis.inference import Inference
 from llama_stack.apis.inspect import Inspect
@@ -25,7 +26,6 @@ from llama_stack.apis.telemetry import Telemetry
 from llama_stack.apis.tools import ToolGroups, ToolRuntime
 from llama_stack.apis.vector_dbs import VectorDBs
 from llama_stack.apis.vector_io import VectorIO
-from llama_stack.apis.document_processing import DocumentProcessing, DocumentProcessors
 from llama_stack.distribution.client import get_client_impl
 from llama_stack.distribution.datatypes import (
     AutoRoutedProviderSpec,
@@ -41,7 +41,6 @@ from llama_stack.providers.datatypes import (
     BenchmarksProtocolPrivate,
     DatasetsProtocolPrivate,
     DocumentProcessingProtocolPrivate,
-    EvalTasksProtocolPrivate,
     InlineProviderSpec,
     ModelsProtocolPrivate,
     ProviderSpec,
